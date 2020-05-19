@@ -9,7 +9,9 @@
     <section>
       <button onclick="bluetoothUser()">CONECTAR DISPOSITIVOS BLUETOOTH</button>
 
-      <button onclick="detectBluetoothUser()">ESCANEAR DISPOSITIVOS BLUETOOTH</button>
+      <button onclick="detectBluetoothUser()">
+        ESCANEAR DISPOSITIVOS BLUETOOTH
+      </button>
     </section>
 
     <script>
@@ -29,57 +31,18 @@
         //options.filters = filters
 
         try {
-          console.log("Requesting Bluetooth Device...")
-          console.log("with " + JSON.stringify(options))
-          const device = await navigator.bluetooth.requestDevice(options)
+          console.log("Requesting Bluetooth Device...");
+          console.log("with " + JSON.stringify(options));
+          const device = await navigator.bluetooth.requestDevice(options);
 
-          console.log("> Name:             " + device.name)
-          console.log("> Id:               " + device.id)<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Test Bluetooth</title>
-  </head>
-
-  <body>
-    <section>
-      <button onclick="bluetoothUser()">CONECTAR DISPOSITIVOS BLUETOOTH</button>
-
-      <button onclick="detectBluetoothUser()">ESCANEAR DISPOSITIVOS BLUETOOTH</button>
-    </section>
-
-    <script>
-      /* CONECTAR BLUETOOTH USUARIO */
-      async function bluetoothUser() {
-        let filters = [
-          { services: ["heart_rate"] },
-          { services: [0x1802, 0x1803] },
-          { services: ["c48e6067-5295-48d3-8d5c-0395f61792b1"] },
-          { name: "ExampleName" },
-          { namePrefix: "Prefix" },
-        ];
-
-        let options = {};
-
-        options.acceptAllDevices = true;
-        //options.filters = filters
-
-        try {
-          console.log("Requesting Bluetooth Device...")
-          console.log("with " + JSON.stringify(options))
-          const device = await navigator.bluetooth.requestDevice(options)
-
-          console.log("> Name:             " + device.name)
-          console.log("> Id:               " + device.id)
-          console.log("> Connected:        " + device.gatt.connected)
+          console.log("> Name:             " + device.name);
+          console.log("> Id:               " + device.id);
+          console.log("> Connected:        " + device.gatt.connected);
         } catch (error) {
-          console.log("Argh! " + error)
+          console.log("Argh! " + error);
         }
       }
       /* end CONECTAR BLUETOOTH USUARIO */
-
-
-
 
       /* DETECTAR BLUETOOTH USUARIO */
       async function detectBluetoothUser() {
@@ -100,133 +63,42 @@
           console.log(
             "Requesting Bluetooth Scan with options: " + JSON.stringify(options)
           );
-          const scan = await navigator.bluetooth.requestLEScan(options)
+          const scan = await navigator.bluetooth.requestLEScan(options);
 
-          console.log("Scan started with:")
+          console.log("Scan started with:");
           console.log(
             " acceptAllAdvertisements: " + scan.acceptAllAdvertisements
-          )
-          console.log(" active: " + scan.active)
-          console.log(" keepRepeatedDevices: " + scan.keepRepeatedDevices)
-          console.log(" filters: " + JSON.stringify(scan.filters))
-
-          navigator.bluetooth.addEventListener(
-            "advertisementreceived",
-            (event) => {
-              console.log("Advertisement received.")
-              console.log("  Device Name: " + event.device.name)
-              console.log("  Device ID: " + event.device.id)
-              console.log("  RSSI: " + event.rssi)
-              console.log("  TX Power: " + event.txPower)
-              console.log("  UUIDs: " + event.uuids)
-              event.manufacturerData.forEach((valueDataView, key) => {
-                logDataView("Manufacturer", key, valueDataView)
-              })
-              event.serviceData.forEach((valueDataView, key) => {
-                logDataView("Service", key, valueDataView)
-              })
-            }
-          )
-
-          setTimeout(stopScan, 10000);
-          function stopScan() {
-            console.log("Stopping scan...")
-            scan.stop();
-            console.log("Stopped.  scan.active = " + scan.active)
-          }
-        } catch (error) {
-          console.log("Argh! " + error)
-        }
-      }
-
-      /* Utils */
-      const logDataView = (labelOfDataSource, key, valueDataView) => {
-        const hexString = [...new Uint8Array(valueDataView.buffer)]
-          .map((b) => {
-            return b.toString(16).padStart(2, "0");
-          })
-          .join(" ");
-        const textDecoder = new TextDecoder("ascii");
-        const asciiString = textDecoder.decode(valueDataView.buffer)
-        console.log(
-          `  ${labelOfDataSource} Data: ` +
-            key +
-            "\n    (Hex) " +
-            hexString +
-            "\n    (ASCII) " +
-            asciiString
-        )
-      }
-      /* end DETECTAR BLUETOOTH USUARIO */
-    </script>
-  </body>
-</html>
-
-          console.log("> Connected:        " + device.gatt.connected)
-        } catch (error) {
-          console.log("Argh! " + error)
-        }
-      }
-      /* end CONECTAR BLUETOOTH USUARIO */
-
-
-
-
-      /* DETECTAR BLUETOOTH USUARIO */
-      async function detectBluetoothUser() {
-        let filters = [
-          { services: ["heart_rate"] },
-          { services: [0x1802, 0x1803] },
-          { services: ["c48e6067-5295-48d3-8d5c-0395f61792b1"] },
-          { name: "ExampleName" },
-          { namePrefix: "Prefix" },
-        ];
-
-        let options = {};
-
-        options.acceptAllAdvertisements = true;
-        //options.filters = filters
-
-        try {
-          console.log(
-            "Requesting Bluetooth Scan with options: " + JSON.stringify(options)
           );
-          const scan = await navigator.bluetooth.requestLEScan(options)
-
-          console.log("Scan started with:")
-          console.log(
-            " acceptAllAdvertisements: " + scan.acceptAllAdvertisements
-          )
-          console.log(" active: " + scan.active)
-          console.log(" keepRepeatedDevices: " + scan.keepRepeatedDevices)
-          console.log(" filters: " + JSON.stringify(scan.filters))
+          console.log(" active: " + scan.active);
+          console.log(" keepRepeatedDevices: " + scan.keepRepeatedDevices);
+          console.log(" filters: " + JSON.stringify(scan.filters));
 
           navigator.bluetooth.addEventListener(
             "advertisementreceived",
             (event) => {
-              console.log("Advertisement received.")
-              console.log("  Device Name: " + event.device.name)
-              console.log("  Device ID: " + event.device.id)
-              console.log("  RSSI: " + event.rssi)
-              console.log("  TX Power: " + event.txPower)
-              console.log("  UUIDs: " + event.uuids)
+              console.log("Advertisement received.");
+              console.log("  Device Name: " + event.device.name);
+              console.log("  Device ID: " + event.device.id);
+              console.log("  RSSI: " + event.rssi);
+              console.log("  TX Power: " + event.txPower);
+              console.log("  UUIDs: " + event.uuids);
               event.manufacturerData.forEach((valueDataView, key) => {
-                logDataView("Manufacturer", key, valueDataView)
-              })
+                logDataView("Manufacturer", key, valueDataView);
+              });
               event.serviceData.forEach((valueDataView, key) => {
-                logDataView("Service", key, valueDataView)
-              })
+                logDataView("Service", key, valueDataView);
+              });
             }
-          )
+          );
 
           setTimeout(stopScan, 10000);
           function stopScan() {
-            console.log("Stopping scan...")
+            console.log("Stopping scan...");
             scan.stop();
-            console.log("Stopped.  scan.active = " + scan.active)
+            console.log("Stopped.  scan.active = " + scan.active);
           }
         } catch (error) {
-          console.log("Argh! " + error)
+          console.log("Argh! " + error);
         }
       }
 
@@ -238,7 +110,7 @@
           })
           .join(" ");
         const textDecoder = new TextDecoder("ascii");
-        const asciiString = textDecoder.decode(valueDataView.buffer)
+        const asciiString = textDecoder.decode(valueDataView.buffer);
         console.log(
           `  ${labelOfDataSource} Data: ` +
             key +
@@ -246,8 +118,8 @@
             hexString +
             "\n    (ASCII) " +
             asciiString
-        )
-      }
+        );
+      };
       /* end DETECTAR BLUETOOTH USUARIO */
     </script>
   </body>
