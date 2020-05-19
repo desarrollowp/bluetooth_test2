@@ -96,10 +96,10 @@
           function stopScan() {
             console.log("Stopping scan...")
             scan.stop();
-            console.loglog("Stopped.  scan.active = " + scan.active)
+            console.log("Stopped.  scan.active = " + scan.active)
           }
         } catch (error) {
-          console.loglog("Argh! " + error)
+          console.log("Argh! " + error)
         }
       }
 
@@ -112,7 +112,7 @@
           .join(" ");
         const textDecoder = new TextDecoder("ascii");
         const asciiString = textDecoder.decode(valueDataView.buffer)
-        console.loglog(
+        console.log(
           `  ${labelOfDataSource} Data: ` +
             key +
             "\n    (Hex) " +
