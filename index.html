@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Test Bluetooth</title>
+  </head>
+
+  <body>
+    <section>
+      <button onclick="bluetoothUser()">INICIAR BLUETOOTH</button>
+    </section>
+
+    <script>
+      /* DETECTAR BLUETOOTH USUARIO */
+      async function bluetoothUser() {
+        let filters = [
+          { services: ["heart_rate"] },
+          { services: [0x1802, 0x1803] },
+          { services: ["c48e6067-5295-48d3-8d5c-0395f61792b1"] },
+          { name: "ExampleName" },
+          { namePrefix: "Prefix" },
+        ];
+
+        let options = {};
+
+        options.acceptAllDevices = true;
+        //options.filters = filters
+
+        try {
+          console.log("Requesting Bluetooth Device...")
+          log("with " + JSON.stringify(options))
+          const device = await navigator.bluetooth.requestDevice(options)
+
+          console.log("> Name:             " + device.name)
+          console.log("> Id:               " + device.id)
+          console.log("> Connected:        " + device.gatt.connected)
+        } catch (error) {
+          console.log("Argh! " + error);
+        }
+      }
+      /* end DETECTAR BLUETOOTH USUARIO */
+    </script>
+  </body>
+</html>
