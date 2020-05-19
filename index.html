@@ -11,8 +11,7 @@
     </section>
 
     <script>
-      alert('cambio')
-      /* DETECTAR BLUETOOTH USUARIO */
+      /* CONECTAR BLUETOOTH USUARIO */
       async function bluetoothUser() {
         let filters = [
           { services: ["heart_rate"] },
@@ -36,38 +35,88 @@
           console.log("> Id:               " + device.id)
           console.log("> Connected:        " + device.gatt.connected)
         } catch (error) {
-          console.log("Argh! " + error);
+          console.log("Argh! " + error)
         }
       }
-      /* end DETECTAR BLUETOOTH USUARIO */
+      /* end CONECTAR BLUETOOTH USUARIO */
 
+      /* DETECTAR BLUETOOTH USUARIO */
+      async function detectBluetoothUser() {
+        let filters = [
+          { services: ["heart_rate"] },
+          { services: [0x1802, 0x1803] },
+          { services: ["c48e6067-5295-48d3-8d5c-0395f61792b1"] },
+          { name: "ExampleName" },
+          { namePrefix: "Prefix" },
+        ];
 
-      function recordNearbyBeacon(major, minor, pathLossVs1m) { 
-        console.log(major)
-        console.log(minor)
-        console.log(minor)
-       }
-      navigator.bluetooth.requestLEScan({
-        filters: [{manufacturerData: {0x004C: {dataPrefix: new Uint8Array([
-          0x02, 0x15, // iBeacon identifier.
-          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15  // My beacon UUID.
-        ])}}}],
-        keepRepeatedDevices: true
-      }).then(() => {
-        navigator.bluetooth.addEventListener('advertisementreceived', event => {
-          let appleData = event.manufacturerData.get(0x004C);
-          if (appleData.byteLength != 23) {
-            // Isn’t an iBeacon.
-            return;
+        let options = {};
+
+        options.acceptAllAdvertisements = true;
+        //options.filters = filters
+
+        try {
+          console.log(
+            "Requesting Bluetooth Scan with options: " + JSON.stringify(options)
+          );
+          const scan = await navigator.bluetooth.requestLEScan(options)
+
+          console.log("Scan started with:")
+          console.log(
+            " acceptAllAdvertisements: " + scan.acceptAllAdvertisements
+          )
+          console.log(" active: " + scan.active)
+          console.log(" keepRepeatedDevices: " + scan.keepRepeatedDevices)
+          console.log(" filters: " + JSON.stringify(scan.filters))
+
+          navigator.bluetooth.addEventListener(
+            "advertisementreceived",
+            (event) => {
+              console.log("Advertisement received.")
+              console.log("  Device Name: " + event.device.name)
+              console.log("  Device ID: " + event.device.id)
+              console.log("  RSSI: " + event.rssi)
+              console.log("  TX Power: " + event.txPower)
+              console.log("  UUIDs: " + event.uuids)
+              event.manufacturerData.forEach((valueDataView, key) => {
+                logDataView("Manufacturer", key, valueDataView)
+              })
+              event.serviceData.forEach((valueDataView, key) => {
+                logDataView("Service", key, valueDataView)
+              })
+            }
+          )
+
+          setTimeout(stopScan, 10000);
+          function stopScan() {
+            console.log("Stopping scan...")
+            scan.stop();
+            console.loglog("Stopped.  scan.active = " + scan.active)
           }
-          let major = appleData.getUint16(18, false);
-          let minor = appleData.getUint16(20, false);
-          let txPowerAt1m = -appleData.getInt8(22);
-          let pathLossVs1m = txPowerAt1m - event.rssi;
+        } catch (error) {
+          console.loglog("Argh! " + error)
+        }
+      }
 
-          recordNearbyBeacon(major, minor, pathLossVs1m);
-        });
-      })
+      /* Utils */
+      const logDataView = (labelOfDataSource, key, valueDataView) => {
+        const hexString = [...new Uint8Array(valueDataView.buffer)]
+          .map((b) => {
+            return b.toString(16).padStart(2, "0");
+          })
+          .join(" ");
+        const textDecoder = new TextDecoder("ascii");
+        const asciiString = textDecoder.decode(valueDataView.buffer)
+        console.loglog(
+          `  ${labelOfDataSource} Data: ` +
+            key +
+            "\n    (Hex) " +
+            hexString +
+            "\n    (ASCII) " +
+            asciiString
+        )
+      }
+      /* end DETECTAR BLUETOOTH USUARIO */
     </script>
   </body>
 </html>
