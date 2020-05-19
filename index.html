@@ -28,7 +28,7 @@
 
         try {
           console.log("Requesting Bluetooth Device...")
-          log("with " + JSON.stringify(options))
+          console.log("with " + JSON.stringify(options))
           const device = await navigator.bluetooth.requestDevice(options)
 
           console.log("> Name:             " + device.name)
