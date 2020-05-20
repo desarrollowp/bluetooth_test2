@@ -35,6 +35,7 @@
           console.log("with " + JSON.stringify(options));
           const device = await navigator.bluetooth.requestDevice(options);
           console.log(device)
+          alert(device)
 
           console.log("> Name:             " + device.name);
           console.log("> Id:               " + device.id);
