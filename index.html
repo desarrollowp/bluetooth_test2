@@ -31,6 +31,7 @@
         //options.filters = filters
 
         try {
+          console.log(device)
           console.log("Requesting Bluetooth Device...");
           console.log("with " + JSON.stringify(options));
           const device = await navigator.bluetooth.requestDevice(options);
